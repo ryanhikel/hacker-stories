@@ -17,19 +17,18 @@ const list = [
   },
 ];
 
-const App = () => {
-  return (
-    <div>
-      <h1>My Hacker Stories</h1>
+const App = () =>
+(
+  <div>
+    <h1>My Hacker Stories</h1>
 
-      <Search />
+    <Search />
 
-      <hr />
+    <hr />
 
-      <List />
-    </div>
-  );
-}
+    <List />
+  </div>
+)
 
 const Search = () => (
   <div>
