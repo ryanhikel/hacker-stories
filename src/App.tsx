@@ -38,18 +38,18 @@ const App = (): ReactElement => {
     },
   ];
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('React');
   const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(event.target.value);
   };
-  const searchedStories = stories.filter((story:IStory) => {
-    return story.title.toLowerCase().includes(searchTerm.toLowerCase());
-  })
+  const searchedStories: IStory[] = stories.filter((story: IStory) =>
+    story.title.toLowerCase().trim().includes(searchTerm.toLowerCase().trim())
+  )
   return (
     <div>
       <h1>My Hacker Stories</h1>
 
-      <Search onSearch={handleSearch} searchTerm={searchTerm} />
+      <Search onSearch={handleSearch} search={searchTerm} />
 
       <hr />
 
@@ -60,10 +60,10 @@ const App = (): ReactElement => {
 
 interface ISearchProps {
   onSearch: (event: ChangeEvent<HTMLInputElement>) => void;
-  searchTerm: string;
+  search: string;
 }
 
-const Search = ({ onSearch, searchTerm }: ISearchProps): ReactElement => {
+const Search = ({ onSearch, search }: ISearchProps): ReactElement => {
   const handleBlur = (): void => {
     // onBlur event is triggered when the input field loses focus
     console.log('onBlur');
@@ -72,10 +72,12 @@ const Search = ({ onSearch, searchTerm }: ISearchProps): ReactElement => {
   return (
     <div>
       <label htmlFor="search">Search: </label>
-      <input id="search" type="text" onChange={onSearch} onBlur={handleBlur} />
-      <p>
-        Searching for <strong>{searchTerm.length ? searchTerm : "..."}</strong>
-      </p>
+      <input
+        id="search"
+        type="text"
+        value={search}
+        onChange={onSearch}
+        onBlur={handleBlur} />
     </div>
   )
 }
