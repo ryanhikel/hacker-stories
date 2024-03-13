@@ -1,6 +1,6 @@
-import { ChangeEvent, ReactElement } from "react";
+import { ChangeEvent, ReactElement, useState } from "react";
 
-type IStory = {
+interface IStory {
   title: string,
   url: string,
   author: string,
@@ -27,44 +27,60 @@ const App = (): ReactElement => {
       points: 5,
       objectID: 1,
     },
+
+    {
+      title: 'Scrum',
+      url: 'https://www.scrum.org/resources/what-scrum-module',
+      author: 'Ken Schwaber, Jeff Sutherland',
+      num_comments: 0,
+      points: 8,
+      objectID: 2,
+    },
   ];
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSearchTerm(event.target.value);
+  };
+  const searchedStories = stories.filter((story:IStory) => {
+    return story.title.toLowerCase().includes(searchTerm.toLowerCase());
+  })
   return (
     <div>
       <h1>My Hacker Stories</h1>
 
-      <Search />
+      <Search onSearch={handleSearch} searchTerm={searchTerm} />
 
       <hr />
 
-      <List list={stories} />
+      <List list={searchedStories} />
     </div>
   )
 }
 
-const Search = (): ReactElement => {
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    console.log((event.target as HTMLInputElement).value);
-    // synthetic event
-    console.log(event);
-    // value of target (here: input HTML element)
-    console.log(event.target.value);
-  };
+interface ISearchProps {
+  onSearch: (event: ChangeEvent<HTMLInputElement>) => void;
+  searchTerm: string;
+}
 
+const Search = ({ onSearch, searchTerm }: ISearchProps): ReactElement => {
   const handleBlur = (): void => {
     // onBlur event is triggered when the input field loses focus
     console.log('onBlur');
   }
 
-
   return (
     <div>
       <label htmlFor="search">Search: </label>
-      <input id="search" type="text" onChange={handleChange} onBlur={handleBlur} />
+      <input id="search" type="text" onChange={onSearch} onBlur={handleBlur} />
+      <p>
+        Searching for <strong>{searchTerm.length ? searchTerm : "..."}</strong>
+      </p>
     </div>
   )
 }
 
-type IListProps = {
+interface IListProps {
   list: IStory[],
 }
 const List = ({ list }: IListProps): ReactElement => (
@@ -76,7 +92,7 @@ const List = ({ list }: IListProps): ReactElement => (
   </ul>
 );
 
-type ItemProps = {
+interface ItemProps {
   item: IStory,
   key: number,
 }
